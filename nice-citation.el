@@ -14,9 +14,17 @@
 
 ;;; Code:
 
+(defgroup nice-citation nil
+  "Nice depth-colored citation marks for Gnus."
+  :prefix "nice-citation-"
+  :group 'nice-citation
+  :link '(url-link :tag "GitHub" "https://github.com/damiencollard/nice-citation"))
+
 ;; Default: Unicode BOX DRAWINGS LIGHT VERTICAL.
 (defcustom nice-citation-mark "│"
-  "Citation mark.")
+  "Citation mark."
+  :type 'string
+  :group 'nice-citation)
 
 (defun nice-citation--depth (marks)
   "Return the citation depth corresponding to string MARKS.
