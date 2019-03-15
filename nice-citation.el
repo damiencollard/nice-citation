@@ -43,7 +43,17 @@
 
 ;; Default: Unicode BOX DRAWINGS LIGHT VERTICAL.
 (defcustom nice-citation-mark "│"
-  "Citation mark."
+  "Citation mark to use in place of the original ones.
+Each occurrence of the character `>` in a citation suffix is
+replaced by this string."
+  :type 'string
+  :group 'nice-citation)
+
+;; While most citation styles have the first chevron `>` as the first character
+;; of a citation line, some infrequent styles have leading spaces.
+(defcustom nice-citation-regex "^\\([ ]*>[> ]*\\)"
+  "Regex used to find original citation marks to replace.
+The part to replace *must* be grouped (parenthesized)."
   :type 'string
   :group 'nice-citation)
 
@@ -77,7 +87,7 @@ The replacement marks are colored the same as the quoted text
 and the symbol used can be customized, see `nice-citation-mark'."
   (save-excursion
     (catch 'done
-      (while (re-search-forward "^\\(>[> ]*\\)" nil t)
+      (while (re-search-forward nice-citation-regex nil t)
         (let ((beg (match-beginning 1))
                (end (match-end 1)))
           (if (get-text-property beg 'nice-citation)
