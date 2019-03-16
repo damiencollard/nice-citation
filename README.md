@@ -5,10 +5,10 @@ traditional chevron citation marks `>` with a nicer Unicode vertical bar
 with the same color as the text it is quoting.
 
 The color of a mark at a given citation depth is taken from
-`gnus-cite-face-list'.
+`gnus-cite-face-list`.
 
 The text of the buffer is unchanged, as the colored citation marks
-make use of text property 'display.
+make use of text property `'display`.
 
 Standard | Nice citations
 :-------:|:--------------:
