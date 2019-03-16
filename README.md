@@ -1,8 +1,8 @@
 # Nice citations for Gnus
 
-In Gnus' article mode, this replaces the traditional chevron citation
-marks `>` with a nicer Unicode vertical bar with the same color as the
-text it is quoting.
+In Gnus' article mode and in message mode, this replaces the
+traditional chevron citation marks `>` with a nicer Unicode vertical bar
+with the same color as the text it is quoting.
 
 The color of a mark at a given citation depth is taken from
 `gnus-cite-face-list'.

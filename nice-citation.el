@@ -86,7 +86,8 @@ to its depth and returns a list of nice, propertized marks."
 The replacement marks are colored the same as the quoted text
 and the symbol used can be customized, see `nice-citation-mark'."
   (save-excursion
-    (catch 'done
+    (with-silent-modifications
+      (catch 'done
       (while (re-search-forward nice-citation-regex nil t)
         (let ((beg (match-beginning 1))
                (end (match-end 1)))
@@ -96,7 +97,7 @@ and the symbol used can be customized, see `nice-citation-mark'."
                    (depth (nice-citation--depth marks))
                    (ovl (apply 'concat (nice-citation--make marks))))
               (put-text-property beg end 'display ovl)
-              (put-text-property beg end 'nice-citation t))))))))
+              (put-text-property beg end 'nice-citation t)))))))))
 
 ;; No hook worked: `gnus-article-prepare-hook', `gnus-article-mode-hook',
 ;; `gnus-part-display-hook' -- they were all run too early, and at best the
@@ -108,12 +109,18 @@ and the symbol used can be customized, see `nice-citation-mark'."
 (defun nice-citation-fontification (_pos)
   "Fontification function actually performing nice-ification of citation marks.
 _POS is unused."
-  (read-only-mode -1)
-  (unwind-protect
-      (nice-citation-apply)
-    (read-only-mode 1)))
+  (let ((saved-ro buffer-read-only))
+    (read-only-mode -1)
+    (unwind-protect
+	(nice-citation-apply)
+      (when saved-ro
+	(read-only-mode 1)))))
 
 (add-hook 'gnus-article-mode-hook
+          (lambda ()
+            (add-to-list 'fontification-functions #'nice-citation-fontification)))
+
+(add-hook 'message-mode-hook
           (lambda ()
             (add-to-list 'fontification-functions #'nice-citation-fontification)))
 
