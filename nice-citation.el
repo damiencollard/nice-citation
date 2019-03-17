@@ -92,16 +92,16 @@ and the symbol used can be customized, see `nice-citation-mark'."
     (with-silent-modifications
       (goto-char (point-min))
       (catch 'done
-      (while (re-search-forward nice-citation-regex nil t)
-        (let ((beg (match-beginning 1))
-              (end (match-end 1)))
-          (if (get-text-property beg 'nice-citation)
-              (throw 'done nil)
-            (let* ((marks (match-string 1))
-                   (depth (nice-citation--depth marks))
-                   (ovl (apply 'concat (nice-citation--make marks))))
-              (put-text-property beg end 'display ovl)
-              (put-text-property beg end 'nice-citation t)))))))))
+        (while (re-search-forward nice-citation-regex nil t)
+          (let ((beg (match-beginning 1))
+                (end (match-end 1)))
+            (if (get-text-property beg 'nice-citation)
+                (throw 'done nil)
+              (let* ((marks (match-string 1))
+                     (depth (nice-citation--depth marks))
+                     (ovl (apply 'concat (nice-citation--make marks))))
+                (put-text-property beg end 'display ovl)
+                (put-text-property beg end 'nice-citation t)))))))))
 
 ;; No hook worked: `gnus-article-prepare-hook', `gnus-article-mode-hook',
 ;; `gnus-part-display-hook' -- they were all run too early, and at best the
