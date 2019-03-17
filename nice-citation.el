@@ -62,9 +62,9 @@ The part to replace *must* be grouped (parenthesized)."
 
 (defun nice-citation--depth (marks)
   "Return the citation depth corresponding to string MARKS.
-MARKS is a list of `>` and space characters as found as prefix of
-a citation line.  Each occurrence of `>` increments the depth by
-1, spaces are ignored."
+MARKS is a prefix of cited text, i.e. a string consisting of `>`
+and spaces.  Each occurrence of `>` increments the depth by 1,
+spaces are ignored."
   (let ((depth 0))
     (dolist (m (string-to-list marks) depth)
       (when (= ?> m)
