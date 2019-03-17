@@ -126,8 +126,11 @@ predicate.  See Info node `(gnus)Customizing Articles' for details."
   :type gnus-article-treat-custom)
 (put 'nice-citation-treat-citation 'highlight t)
 
-(add-to-list 'gnus-treatment-function-alist
-             '(nice-citation-treat-citations nice-citation-apply))
+;; Prettification of citation marks must be done last, otherwise it doesn't
+;; work properly on long, wrapped/filled lines.  Hence we must use `nconc'
+;; rather than `add-to-list`.
+(nconc gnus-treatment-function-alist
+             '((nice-citation-treat-citations nice-citation-apply)))
 
 (add-hook 'message-mode-hook
           (lambda ()
