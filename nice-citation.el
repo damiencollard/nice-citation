@@ -103,15 +103,10 @@ and the symbol used can be customized, see `nice-citation-mark'."
                 (put-text-property beg end 'display ovl)
                 (put-text-property beg end 'nice-citation t)))))))))
 
-;; No hook worked: `gnus-article-prepare-hook', `gnus-article-mode-hook',
-;; `gnus-part-display-hook' -- they were all run too early, and at best the
-;; nice citation marks overlays were created but were all the same face instead
-;; of having the face of the text they're quoting.
-;;
 ;; So we're abusing the `fontification-functions' list a bit and it works fine
 ;; as `nice-citation-apply' does its best to actually run only once.
 (defun nice-citation-fontification (_pos)
-  "Fontification function actually performing nice-ification of citation marks.
+  "Fontification function actually performing prettification of citation marks.
 _POS is unused."
   (let ((saved-ro buffer-read-only))
     (read-only-mode -1)
