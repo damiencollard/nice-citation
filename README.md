@@ -32,3 +32,6 @@ be changed by customizing variable `nice-citation-mark`.
 
 The colors/faces used are taken directly from Gnus, so to change them,
 you have to customize variable `gnus-cite-face-list`.
+
+The nice citations can be disabled in article mode by setting
+`nice-citation-treat-citations` in group `gnus-article-treat` to nil.

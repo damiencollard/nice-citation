@@ -35,6 +35,9 @@
 
 ;;; Code:
 
+(require 'gnus-art)
+(require 'gnus-cite)
+
 (defgroup nice-citation nil
   "Nice depth-colored citation marks for Gnus."
   :prefix "nice-citation-"
@@ -87,10 +90,11 @@ The replacement marks are colored the same as the quoted text
 and the symbol used can be customized, see `nice-citation-mark'."
   (save-excursion
     (with-silent-modifications
+      (goto-char (point-min))
       (catch 'done
       (while (re-search-forward nice-citation-regex nil t)
         (let ((beg (match-beginning 1))
-               (end (match-end 1)))
+              (end (match-end 1)))
           (if (get-text-property beg 'nice-citation)
               (throw 'done nil)
             (let* ((marks (match-string 1))
@@ -116,9 +120,19 @@ _POS is unused."
       (when saved-ro
 	(read-only-mode 1)))))
 
-(add-hook 'gnus-article-mode-hook
-          (lambda ()
-            (add-to-list 'fontification-functions #'nice-citation-fontification)))
+(defcustom nice-citation-treat-citations t
+  "Replace citation marks with nicer highlighted ones.
+The new marks use a Unicode character and are highlighted with
+the same face as the text they're citing.
+Valid values are nil, t, `head', `first', `last', an integer or a
+predicate.  See Info node `(gnus)Customizing Articles' for details."
+  :group 'gnus-article-treat
+  :link '(custom-manual "(gnus)Customizing Articles")
+  :type gnus-article-treat-custom)
+(put 'nice-citation-treat-citation 'highlight t)
+
+(add-to-list 'gnus-treatment-function-alist
+             '(nice-citation-treat-citations nice-citation-apply))
 
 (add-hook 'message-mode-hook
           (lambda ()
