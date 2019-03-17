@@ -28,7 +28,8 @@ Add the following line to your emacs configuration:
 ## Customization
 
 The symbol used as mark (a Unicode light vertical bar by default) can
-be changed by customizing variable `nice-citation-mark`.
+be changed by customizing variable `nice-citation-mark`. It works well
+with Fira Code, for instance.
 
 The colors/faces used are taken directly from Gnus, so to change them,
 you have to customize variable `gnus-cite-face-list`.
