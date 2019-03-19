@@ -86,34 +86,30 @@ to its depth and returns a list of nice, propertized marks."
 
 (defun nice-citation-apply ()
   "Replace citation marks `>` with a nice colored symbol.
-The replacement marks are colored the same as the quoted text
+The replacement marks are colored the same as the cited text
 and the symbol used can be customized, see `nice-citation-mark'."
-  (save-excursion
-    (with-silent-modifications
-      (goto-char (point-min))
-      (catch 'done
-        (while (re-search-forward nice-citation-regex nil t)
-          (let ((beg (match-beginning 1))
-                (end (match-end 1)))
-            (if (get-text-property beg 'nice-citation)
-                (throw 'done nil)
-              (let* ((marks (match-string 1))
-                     (depth (nice-citation--depth marks))
-                     (ovl (apply 'concat (nice-citation--make marks))))
-                (put-text-property beg end 'display ovl)
-                (put-text-property beg end 'nice-citation t)))))))))
+  (let ((inhibit-read-only t))
+    (save-excursion
+      (with-silent-modifications
+        (goto-char (point-min))
+        (catch 'done
+          (while (re-search-forward nice-citation-regex nil t)
+            (let ((beg (match-beginning 1))
+                  (end (match-end 1)))
+              (if (get-text-property beg 'nice-citation)
+                  (throw 'done nil)
+                (let* ((marks (match-string 1))
+                       (depth (nice-citation--depth marks))
+                       (ovl (apply 'concat (nice-citation--make marks))))
+                  (put-text-property beg end 'display ovl)
+                  (put-text-property beg end 'nice-citation t))))))))))
 
-;; So we're abusing the `fontification-functions' list a bit and it works fine
-;; as `nice-citation-apply' does its best to actually run only once.
+;; This works fine as `nice-citation-apply' applies its transformations once.
 (defun nice-citation-fontification (_pos)
-  "Fontification function actually performing prettification of citation marks.
+  "Fontification of citation marks.
+Meant to be added to `fontification-functions'.
 _POS is unused."
-  (let ((saved-ro buffer-read-only))
-    (read-only-mode -1)
-    (unwind-protect
-	(nice-citation-apply)
-      (when saved-ro
-	(read-only-mode 1)))))
+  (nice-citation-apply))
 
 (defcustom nice-citation-treat-citations t
   "Replace citation marks with nicer highlighted ones.
