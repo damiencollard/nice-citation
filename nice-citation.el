@@ -41,7 +41,7 @@
 (defgroup nice-citation nil
   "Nice depth-colored citation marks for Gnus."
   :prefix "nice-citation-"
-  :group 'nice-citation
+  :group 'gnus-article
   :link '(url-link :tag "GitHub" "https://github.com/damiencollard/nice-citation"))
 
 ;; Default: Unicode BOX DRAWINGS LIGHT VERTICAL.
@@ -117,6 +117,7 @@ The new marks use a Unicode character and are highlighted with
 the same face as the text they're citing.
 Valid values are nil, t, `head', `first', `last', an integer or a
 predicate.  See Info node `(gnus)Customizing Articles' for details."
+  :group 'nice-citation
   :group 'gnus-article-treat
   :link '(custom-manual "(gnus)Customizing Articles")
   :type gnus-article-treat-custom)
