@@ -60,6 +60,14 @@ The part to replace *must* be grouped (parenthesized)."
   :type 'string
   :group 'nice-citation)
 
+(defcustom nice-citation-improve-marks-alignment t
+  "Make the citation marks align with the text.
+This ensures there's always a space between two consecutive
+marks, which in effect makes the citation mark at depth N+1
+left-align with the text of citation at depth N."
+  :type 'boolean
+  :group 'nice-citation)
+
 (defun nice-citation--depth (marks)
   "Return the citation depth corresponding to string MARKS.
 MARKS is a prefix of cited text, i.e. a string consisting of `>`
@@ -74,13 +82,20 @@ spaces are ignored."
    "Make nice citation marks to replace the given MARKS.
 Applies to each mark in MARKS the Gnus citation face corresponding
 to its depth and returns a list of nice, propertized marks."
-   (let ((depth 0))
+   (let ((depth 0)
+         (prev-was-mark nil))
      (mapcar (lambda (c)
                (if (= ?> c)
-                   (let ((face (nth depth gnus-cite-face-list)))
+                   (let ((mark (if (and prev-was-mark
+                                        nice-citation-improve-marks-alignment)
+                                   (concat " " nice-citation-mark)
+                                 nice-citation-mark))
+                         (face (nth depth gnus-cite-face-list)))
                      (prog1
-                         (propertize nice-citation-mark 'face face 'evaporate t)
+                         (propertize mark 'face face 'evaporate t)
+                       (setq prev-was-mark t)
                        (setq depth (1+ depth))))
+                 (setq prev-was-mark nil)
                  " "))
              marks)))
 
