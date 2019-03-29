@@ -10,6 +10,10 @@ The color of a mark at a given citation depth is taken from
 The text of the buffer is unchanged, as the colored citation marks
 make use of text property `'display`.
 
+It is purely **presentation**: The underlying text is **unchanged**. In
+particular, if you send an e-mail containing a citation, it will
+contain the traditional chevron marks.
+
 Standard | Nice citations
 :-------:|:--------------:
 ![Without](images/without.png?raw=true "Without")  | ![With](images/with.png?raw=true "With")

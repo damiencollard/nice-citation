@@ -44,8 +44,9 @@
   :group 'gnus-article
   :link '(url-link :tag "GitHub" "https://github.com/damiencollard/nice-citation"))
 
-;; Default: Unicode BOX DRAWINGS LIGHT VERTICAL.
-(defcustom nice-citation-mark "│"
+;; Default: Unicode LEFT ONE QUARTER BLOCK.
+;; A good alternative is BOX DRAWINGS LIGHT VERTICAL.
+(defcustom nice-citation-mark "▎"
   "Citation mark to use in place of the original ones.
 Each occurrence of the character `>` in a citation prefix is
 replaced by this string."
