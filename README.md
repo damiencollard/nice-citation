@@ -38,5 +38,9 @@ with Fira Code, for instance.
 The colors/faces used are taken directly from Gnus, so to change them,
 you have to customize variable `gnus-cite-face-list`.
 
+Variable `nice-citatation-improve-marks-alignment` makes the vertical
+marks align with the surrounding text. Its effect is noticeable in
+case of nested citations. It is disabled by default.
+
 The nice citations can be disabled in article mode by setting
 `nice-citation-treat-citations` in group `gnus-article-treat` to nil.
