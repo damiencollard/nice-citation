@@ -4,7 +4,7 @@
 
 ;; Author: Damien Collard <damien.collard@laposte.net>
 ;; URL:
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Keywords: gnus mail convenience
 ;; Package-Requires: ((emacs "24.3") (gnus "5.13"))
 
@@ -100,32 +100,36 @@ to its depth and returns a list of nice, propertized marks."
                  " "))
              marks)))
 
-(defun nice-citation-apply ()
+(defun nice-citation-transform (pos limit)
   "Replace citation marks `>` with a nice colored symbol.
-The replacement marks are colored the same as the cited text
-and the symbol used can be customized, see `nice-citation-mark'."
-  (let ((inhibit-read-only t))
-    (save-excursion
-      (with-silent-modifications
-        (goto-char (point-min))
-        (catch 'done
-          (while (re-search-forward nice-citation-regex nil t)
-            (let ((beg (match-beginning 1))
-                  (end (match-end 1)))
-              (if (get-text-property beg 'nice-citation)
-                  (throw 'done nil)
-                (let* ((marks (match-string 1))
-                       (depth (nice-citation--depth marks))
-                       (ovl (apply 'concat (nice-citation--make marks))))
-                  (put-text-property beg end 'display ovl)
-                  (put-text-property beg end 'nice-citation t))))))))))
 
-;; This works fine as `nice-citation-apply' applies its transformations once.
-(defun nice-citation-fontification (_pos)
-  "Fontification of citation marks.
-Meant to be added to `fontification-functions'.
-_POS is unused."
-  (nice-citation-apply))
+The transformation is applied starting at POS on a maximum of
+LIMIT characters.
+
+The replacement marks are colored the same as the cited text and
+the symbol used can be customized, see `nice-citation-mark'."
+  (let ((bound (if limit (+ pos limit) (point-max))))
+    (with-silent-modifications
+      (save-excursion
+        (goto-char pos)
+        (while (re-search-forward nice-citation-regex bound t)
+          (let ((beg (match-beginning 1))
+                (end (match-end 1)))
+            (let* ((marks (match-string 1))
+                     (depth (nice-citation--depth marks))
+                     (ovl (apply 'concat (nice-citation--make marks))))
+                (put-text-property beg end 'display ovl)
+                (put-text-property beg end 'nice-citation t))))))))
+
+(defun nice-citation-transform-all ()
+  "Transform citation marks in the whole buffer."
+  (nice-citation-transform (point-min) nil))
+
+(defun nice-citation-fontify (pos)
+  "Fontify the citation marks starting at POS.
+Meant to be added to `fontification-functions'."
+  ;; Limit is set to 500 because that's what message-mode seems to use.
+  (nice-citation-transform pos 500))
 
 (defcustom nice-citation-treat-citations t
   "Replace citation marks with nicer highlighted ones.
@@ -143,11 +147,11 @@ predicate.  See Info node `(gnus)Customizing Articles' for details."
 ;; work properly on long, wrapped/filled lines.  Hence we must use `nconc'
 ;; rather than `add-to-list`.
 (nconc gnus-treatment-function-alist
-             '((nice-citation-treat-citations nice-citation-apply)))
+             '((nice-citation-treat-citations nice-citation-transform-all)))
 
 (add-hook 'message-mode-hook
           (lambda ()
-            (add-to-list 'fontification-functions #'nice-citation-fontification)))
+            (add-to-list 'fontification-functions #'nice-citation-fontify)))
 
 (provide 'nice-citation)
 ;;; nice-citation.el ends here
