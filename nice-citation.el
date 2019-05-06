@@ -93,7 +93,7 @@ to its depth and returns a list of nice, propertized marks."
                                  nice-citation-mark))
                          (face (nth depth gnus-cite-face-list)))
                      (prog1
-                         (propertize mark 'face face 'evaporate t)
+                         (propertize mark 'face `(,face (:slant normal)) 'evaporate t)
                        (setq prev-was-mark t)
                        (setq depth (1+ depth))))
                  (setq prev-was-mark nil)
